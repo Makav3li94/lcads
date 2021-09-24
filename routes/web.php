@@ -13,10 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/' ,[App\Http\Controllers\HomeController::class, 'welcome']);
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::resource('posts', '\App\Http\Controllers\PostController')->except('show');
+
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+});
